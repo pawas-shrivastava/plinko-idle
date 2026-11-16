@@ -1,0 +1,11 @@
+{
+  "name": "plinko-idle",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node tools/serve.mjs 8080",
+    "verify": "node tools/verify-drops.mjs && node tools/verify-board.mjs && node tools/check-motion.mjs && node tools/check-save.mjs",
+    "progress": "node tools/sim-progress.mjs",
+    "progress:fit": "node tools/sim-progress.mjs --fit"
+  }
+}

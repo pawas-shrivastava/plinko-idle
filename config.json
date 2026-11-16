@@ -1,0 +1,1979 @@
+{
+  "configVersion": 1,
+  "rng": {
+    "defaultSeed": 20261115
+  },
+  "sim": {
+    "maxFrameDtSec": 0.1,
+    "firstDropDelaySec": 0.4,
+    "incomeWindowSec": 60
+  },
+  "distribution": {
+    "binomialAboveConcentration": 10000,
+    "spreads": {
+      "tight": {
+        "label": "Tight",
+        "concentrationMul": 1.8,
+        "sharpnessMul": 1.1
+      },
+      "normal": {
+        "label": "Normal",
+        "concentrationMul": 1.0,
+        "sharpnessMul": 1.0
+      },
+      "wide": {
+        "label": "Wide",
+        "concentrationMul": 0.6,
+        "sharpnessMul": 0.93
+      }
+    }
+  },
+  "economy": {
+    "startCoins": 0
+  },
+  "offline": {
+    "minAwaySec": 60,
+    "capHours": 2,
+    "efficiency": 0.5
+  },
+  "save": {
+    "key": "plinko-idle-save-v1",
+    "everySec": 5
+  },
+  "workshop": {
+    "ballValue": {
+      "name": "Ball Value",
+      "desc": "Coins per ball",
+      "unit": "coins/ball",
+      "base": 1,
+      "perLevel": 1,
+      "maxLevel": 20000,
+      "cost": {
+        "base": 8,
+        "growth": 1.45
+      },
+      "late": {
+        "level": 20,
+        "statGrowth": 1.004,
+        "k": 1.5
+      }
+    },
+    "dropRate": {
+      "name": "Drop Rate",
+      "desc": "Balls per second from each dropper",
+      "unit": "balls/s",
+      "base": 1.0,
+      "perLevel": 0.2,
+      "maxLevel": 10,
+      "cost": {
+        "base": 12,
+        "growth": 1.55
+      }
+    },
+    "luck": {
+      "name": "Luck",
+      "desc": "Chance to route through special pegs",
+      "unit": "luck",
+      "base": 0,
+      "perLevel": 0.25,
+      "maxLevel": 40,
+      "cost": {
+        "base": 150,
+        "growth": 1.6
+      },
+      "requires": "specialPegs",
+      "lockedText": "Unlocks with your first special peg"
+    },
+    "goldenTouch": {
+      "name": "Golden Touch",
+      "desc": "Share of balls that glow by themselves (a glowing ball pays \u00d73)",
+      "unit": "% of balls glow",
+      "base": 0,
+      "perLevel": 2,
+      "maxLevel": 10,
+      "cost": {
+        "base": 600,
+        "growth": 2.3
+      }
+    },
+    "autoFrenzy": {
+      "name": "Auto-Frenzy",
+      "desc": "Starts Frenzy by itself whenever the meter is full",
+      "unit": "",
+      "labels": [
+        "manual",
+        "automatic"
+      ],
+      "base": 0,
+      "perLevel": 1,
+      "maxLevel": 1,
+      "cost": {
+        "base": 25000,
+        "growth": 1
+      }
+    }
+  },
+  "analytics": {
+    "endpoint": "",
+    "storageKey": "plinko-idle-analytics-v1",
+    "maxLocalEvents": 2000,
+    "flushEverySec": 30
+  },
+  "ftue": {
+    "enabled": true,
+    "steps": [
+      {
+        "id": "watch",
+        "text": "Balls drop by themselves. Each one lands in a bucket and pays that bucket's \u00d7."
+      },
+      {
+        "id": "jackpot",
+        "text": "The edge buckets pay the most. Here comes a lucky one\u2026"
+      },
+      {
+        "id": "tap",
+        "text": "Tap a falling ball: it glows and pays \u00d73."
+      },
+      {
+        "id": "buy",
+        "text": "Spend coins in the Workshop. Buy Ball Value.",
+        "highlight": "#upgrades .upg"
+      },
+      {
+        "id": "goal",
+        "text": "Coins you earn fill the goal bar. Reach the first mark to unlock Flippers.",
+        "highlight": "#goal"
+      },
+      {
+        "id": "flippers",
+        "text": "Flippers unlocked! Open the Board tab and buy them.",
+        "highlight": ".tab[data-page=board]"
+      },
+      {
+        "id": "flip",
+        "text": "Tap the board when a ball is inside a flipper's ring to fling it toward the edge."
+      },
+      {
+        "id": "frenzy",
+        "text": "The Frenzy meter fills with time and taps. When it's full, tap it: everything pays \u00d73.",
+        "highlight": "#frenzyBtn"
+      }
+    ],
+    "doneText": "You're set! Fill the goal bar to open the next board."
+  },
+  "active": {
+    "tapBall": {
+      "mul": 3,
+      "radius": 0.75,
+      "chargeSec": 1.5
+    },
+    "frenzy": {
+      "mul": 3,
+      "durationSec": 15,
+      "chargeSec": 90
+    }
+  },
+  "rarities": {
+    "common": {
+      "label": "Common",
+      "color": "#b8c0ff"
+    },
+    "rare": {
+      "label": "Rare",
+      "color": "#4cc9f0"
+    },
+    "epic": {
+      "label": "Epic",
+      "color": "#c77dff"
+    },
+    "legendary": {
+      "label": "Legendary",
+      "color": "#ffb703"
+    }
+  },
+  "stars": {
+    "max": 5,
+    "valueBonusPerStar": 0.1,
+    "traitStrengthPerStar": 0.2
+  },
+  "traits": {
+    "golden": {
+      "name": "Golden",
+      "desc": "{chance}% pay \u00d7{mul}",
+      "chance": 0.05,
+      "payoutMul": 2,
+      "active": true
+    },
+    "splitter": {
+      "name": "Splitter",
+      "desc": "{chance}% split on 1st special peg",
+      "chance": 0.6,
+      "active": true
+    },
+    "comet": {
+      "name": "Comet",
+      "desc": "Doubles 1st peg bonus",
+      "active": true
+    },
+    "heavy": {
+      "name": "Heavy",
+      "desc": "Ignores Bumpers",
+      "active": true
+    }
+  },
+  "ballTypes": [
+    {
+      "id": "rubber",
+      "skin": "stripe",
+      "name": "Rubber",
+      "rarity": "common",
+      "spread": "normal",
+      "valueBonus": 0,
+      "luckBonus": 0.1,
+      "trait": null,
+      "colors": [
+        "#ffffff",
+        "#ff6b6b",
+        "#c92a2a"
+      ],
+      "motion": {
+        "hopMul": 1.0,
+        "timeMul": 1.0,
+        "doubleTapMul": 1.0,
+        "tapHeightMul": 1.0,
+        "rimRollMul": 1.0,
+        "spinMul": 1.0,
+        "landBounces": 0
+      },
+      "blurb": "All-rounder"
+    },
+    {
+      "id": "steel",
+      "skin": "chrome",
+      "name": "Steel",
+      "rarity": "common",
+      "spread": "tight",
+      "valueBonus": 0.2,
+      "luckBonus": 0,
+      "trait": null,
+      "colors": [
+        "#ffffff",
+        "#b8c4d6",
+        "#5c6b80"
+      ],
+      "motion": {
+        "hopMul": 0.35,
+        "timeMul": 0.85,
+        "doubleTapMul": 0,
+        "tapHeightMul": 0.5,
+        "rimRollMul": 2.5,
+        "spinMul": 0.4,
+        "landBounces": 0
+      },
+      "blurb": "Steady income"
+    },
+    {
+      "id": "bouncy",
+      "skin": "bubble",
+      "name": "Bouncy",
+      "rarity": "rare",
+      "spread": "wide",
+      "valueBonus": -0.2,
+      "luckBonus": 0.1,
+      "trait": "comet",
+      "colors": [
+        "#ffffff",
+        "#5ce1ff",
+        "#1b7fd1"
+      ],
+      "motion": {
+        "hopMul": 1.6,
+        "timeMul": 1.06,
+        "doubleTapMul": 4.5,
+        "tapHeightMul": 4.5,
+        "rimRollMul": 0.2,
+        "spinMul": 1.5,
+        "landBounces": 2
+      },
+      "blurb": "Swingy edge-hunter"
+    },
+    {
+      "id": "clover",
+      "skin": "clover",
+      "name": "Lucky Clover",
+      "rarity": "rare",
+      "spread": "normal",
+      "valueBonus": -0.1,
+      "luckBonus": 0.6,
+      "trait": "splitter",
+      "colors": [
+        "#ffffff",
+        "#69db7c",
+        "#2b8a3e"
+      ],
+      "motion": {
+        "hopMul": 1.1,
+        "timeMul": 1.0,
+        "doubleTapMul": 1.2,
+        "tapHeightMul": 1.3,
+        "rimRollMul": 1.0,
+        "spinMul": 1.0,
+        "landBounces": 0
+      },
+      "blurb": "Loves special pegs"
+    },
+    {
+      "id": "gold",
+      "skin": "coin",
+      "name": "Gold",
+      "rarity": "epic",
+      "spread": "normal",
+      "valueBonus": 0.35,
+      "luckBonus": -0.3,
+      "trait": "golden",
+      "colors": [
+        "#fffbe0",
+        "#ffd23f",
+        "#b8860b"
+      ],
+      "motion": {
+        "hopMul": 0.55,
+        "timeMul": 0.92,
+        "doubleTapMul": 0.3,
+        "tapHeightMul": 0.6,
+        "rimRollMul": 1.8,
+        "spinMul": 0.6,
+        "landBounces": 0
+      },
+      "blurb": "Big value, unlucky"
+    }
+  ],
+  "startingBall": "rubber",
+  "prototype": {
+    "allBoardsOpen": false,
+    "allBallsOwned": true
+  },
+  "boards": [
+    {
+      "id": 1,
+      "name": "Toy Box",
+      "blurb": "The classic: edges pay, the middle doesn't",
+      "theme": "toybox",
+      "goal": 1600000,
+      "payoutScale": 1,
+      "milestones": [
+        {
+          "at": 0.01,
+          "unlock": "piece:flippers"
+        },
+        {
+          "at": 0.077,
+          "unlock": "piece:lids"
+        },
+        {
+          "at": 0.6,
+          "unlock": "piece:autoFlip"
+        }
+      ],
+      "rows": 8,
+      "maxDroppers": 1,
+      "costScale": 1,
+      "distribution": {
+        "concentration": 30,
+        "sharpness": 1.3
+      },
+      "multipliers": [
+        50,
+        8,
+        2,
+        1.2,
+        1,
+        1.2,
+        2,
+        8,
+        50
+      ],
+      "sockets": [
+        {
+          "r": 2,
+          "i": 1
+        },
+        {
+          "r": 6,
+          "i": 2
+        }
+      ],
+      "flippers": [
+        {
+          "r": 2,
+          "i": 0,
+          "dir": -1
+        },
+        {
+          "r": 2,
+          "i": 2,
+          "dir": 1
+        }
+      ],
+      "pegTypes": [
+        "gold",
+        "multiplier"
+      ],
+      "pieces": [
+        "lids",
+        "flippers",
+        "autoFlip"
+      ],
+      "targetTopBucketOneIn": 232,
+      "flatten": 1,
+      "power": 1
+    },
+    {
+      "id": 2,
+      "name": "Pirate Cove",
+      "blurb": "Taller board, richer edges",
+      "theme": "cove",
+      "goal": 9900000,
+      "payoutScale": 8.8,
+      "milestones": [
+        {
+          "at": 0.01,
+          "unlock": "piece:flippers"
+        },
+        {
+          "at": 0.028,
+          "unlock": "piece:lids"
+        },
+        {
+          "at": 0.077,
+          "unlock": "piece:autoFlip"
+        },
+        {
+          "at": 0.22,
+          "unlock": "dropper:1"
+        },
+        {
+          "at": 0.6,
+          "unlock": "piece:trampoline"
+        }
+      ],
+      "rows": 10,
+      "maxDroppers": 2,
+      "costScale": 570,
+      "distribution": {
+        "concentration": 12,
+        "sharpness": 1.3
+      },
+      "multipliers": [
+        180,
+        24,
+        6,
+        2.5,
+        1.5,
+        1.2,
+        1.5,
+        2.5,
+        6,
+        24,
+        180
+      ],
+      "sockets": [
+        {
+          "r": 2,
+          "i": 1
+        },
+        {
+          "r": 4,
+          "i": 1
+        },
+        {
+          "r": 8,
+          "i": 4
+        }
+      ],
+      "flippers": [
+        {
+          "r": 3,
+          "i": 0,
+          "dir": -1
+        },
+        {
+          "r": 3,
+          "i": 3,
+          "dir": 1
+        }
+      ],
+      "pegTypes": [
+        "gold",
+        "multiplier",
+        "splitter"
+      ],
+      "pieces": [
+        "lids",
+        "flippers",
+        "autoFlip",
+        "trampoline"
+      ],
+      "targetTopBucketOneIn": 386,
+      "flatten": 0.7,
+      "power": 0.05,
+      "valueCost": 743
+    },
+    {
+      "id": 3,
+      "name": "Fairground",
+      "blurb": "Tallest board; the jackpot is a long way out",
+      "theme": "fair",
+      "goal": 45000000,
+      "payoutScale": 6.5,
+      "milestones": [
+        {
+          "at": 0.01,
+          "unlock": "piece:flippers"
+        },
+        {
+          "at": 0.017,
+          "unlock": "piece:lids"
+        },
+        {
+          "at": 0.028,
+          "unlock": "piece:autoFlip"
+        },
+        {
+          "at": 0.046,
+          "unlock": "dropper:1"
+        },
+        {
+          "at": 0.077,
+          "unlock": "piece:trampoline"
+        },
+        {
+          "at": 0.13,
+          "unlock": "piece:suction"
+        },
+        {
+          "at": 0.22,
+          "unlock": "piece:magnet"
+        },
+        {
+          "at": 0.36,
+          "unlock": "piece:suctionPull"
+        },
+        {
+          "at": 0.6,
+          "unlock": "dropper:2"
+        }
+      ],
+      "rows": 12,
+      "maxDroppers": 3,
+      "costScale": 1200,
+      "distribution": {
+        "concentration": 12,
+        "sharpness": 1.0
+      },
+      "multipliers": {
+        "center": 1.5,
+        "edge": 600,
+        "curve": 1.6
+      },
+      "sockets": [
+        {
+          "r": 2,
+          "i": 1
+        },
+        {
+          "r": 4,
+          "i": 3
+        },
+        {
+          "r": 6,
+          "i": 2
+        },
+        {
+          "r": 8,
+          "i": 5
+        }
+      ],
+      "flippers": [
+        {
+          "r": 5,
+          "i": 1,
+          "dir": -1
+        },
+        {
+          "r": 5,
+          "i": 4,
+          "dir": 1
+        }
+      ],
+      "pegTypes": [
+        "gold",
+        "multiplier",
+        "splitter",
+        "bumper"
+      ],
+      "pieces": [
+        "lids",
+        "flippers",
+        "autoFlip",
+        "trampoline",
+        "suction",
+        "suctionPull",
+        "magnet"
+      ],
+      "targetTopBucketOneIn": 309,
+      "flatten": 0.7,
+      "power": 0.29,
+      "valueCost": 1010
+    },
+    {
+      "id": 4,
+      "name": "Sand Temple",
+      "blurb": "Walls squeeze every ball through a narrow waist, then it opens out again",
+      "theme": "temple",
+      "goal": 330000000,
+      "payoutScale": 22,
+      "milestones": [
+        {
+          "at": 0.01,
+          "unlock": "piece:flippers"
+        },
+        {
+          "at": 0.017,
+          "unlock": "piece:lids"
+        },
+        {
+          "at": 0.028,
+          "unlock": "piece:autoFlip"
+        },
+        {
+          "at": 0.046,
+          "unlock": "dropper:1"
+        },
+        {
+          "at": 0.077,
+          "unlock": "piece:trampoline"
+        },
+        {
+          "at": 0.13,
+          "unlock": "piece:suction"
+        },
+        {
+          "at": 0.22,
+          "unlock": "piece:magnet"
+        },
+        {
+          "at": 0.36,
+          "unlock": "piece:suctionPull"
+        },
+        {
+          "at": 0.6,
+          "unlock": "dropper:2"
+        }
+      ],
+      "rows": 10,
+      "maxDroppers": 3,
+      "costScale": 3600,
+      "distribution": {
+        "concentration": 12,
+        "sharpness": 1.0
+      },
+      "shape": {
+        "halfWidth": [
+          0,
+          0.5,
+          1,
+          1.5,
+          2,
+          1.5,
+          1,
+          1.5,
+          2,
+          2.5,
+          3
+        ]
+      },
+      "multipliers": [
+        0,
+        0,
+        60,
+        8,
+        1.5,
+        0.6,
+        1.5,
+        8,
+        60,
+        0,
+        0
+      ],
+      "sockets": [
+        {
+          "r": 2,
+          "i": 1
+        },
+        {
+          "r": 4,
+          "i": 2
+        },
+        {
+          "r": 6,
+          "i": 3
+        },
+        {
+          "r": 8,
+          "i": 3
+        }
+      ],
+      "flippers": [
+        {
+          "r": 2,
+          "i": 0,
+          "dir": -1
+        },
+        {
+          "r": 2,
+          "i": 2,
+          "dir": 1
+        }
+      ],
+      "pegTypes": [
+        "gold",
+        "multiplier",
+        "splitter",
+        "bumper"
+      ],
+      "pieces": [
+        "lids",
+        "flippers",
+        "autoFlip",
+        "trampoline",
+        "suction",
+        "suctionPull",
+        "magnet"
+      ],
+      "flatten": 0.7,
+      "power": 0.05,
+      "valueCost": 1380
+    },
+    {
+      "id": 5,
+      "name": "Snow Peak",
+      "blurb": "A wall down the left side: everything leans right, where the money is",
+      "theme": "snow",
+      "goal": 9400000000,
+      "payoutScale": 180,
+      "milestones": [
+        {
+          "at": 0.01,
+          "unlock": "piece:flippers"
+        },
+        {
+          "at": 0.017,
+          "unlock": "piece:lids"
+        },
+        {
+          "at": 0.028,
+          "unlock": "piece:autoFlip"
+        },
+        {
+          "at": 0.046,
+          "unlock": "dropper:1"
+        },
+        {
+          "at": 0.077,
+          "unlock": "piece:trampoline"
+        },
+        {
+          "at": 0.13,
+          "unlock": "piece:suction"
+        },
+        {
+          "at": 0.22,
+          "unlock": "piece:magnet"
+        },
+        {
+          "at": 0.36,
+          "unlock": "piece:suctionPull"
+        },
+        {
+          "at": 0.6,
+          "unlock": "dropper:2"
+        }
+      ],
+      "rows": 10,
+      "maxDroppers": 3,
+      "costScale": 43000,
+      "distribution": {
+        "concentration": 12,
+        "sharpness": 1.3
+      },
+      "shape": {
+        "xMin": -1
+      },
+      "multipliers": [
+        0,
+        0,
+        0,
+        0,
+        0.5,
+        0.8,
+        1,
+        1.5,
+        4,
+        20,
+        200
+      ],
+      "sockets": [
+        {
+          "r": 2,
+          "i": 1
+        },
+        {
+          "r": 4,
+          "i": 3
+        },
+        {
+          "r": 6,
+          "i": 4
+        },
+        {
+          "r": 8,
+          "i": 6
+        }
+      ],
+      "flippers": [
+        {
+          "r": 3,
+          "i": 1,
+          "dir": 1
+        },
+        {
+          "r": 5,
+          "i": 3,
+          "dir": 1
+        }
+      ],
+      "pegTypes": [
+        "gold",
+        "multiplier",
+        "splitter",
+        "bumper"
+      ],
+      "pieces": [
+        "lids",
+        "flippers",
+        "autoFlip",
+        "trampoline",
+        "suction",
+        "suctionPull",
+        "magnet"
+      ],
+      "flatten": 0.7,
+      "power": 0.05,
+      "valueCost": 4140
+    },
+    {
+      "id": 6,
+      "name": "Candy Shop",
+      "blurb": "Small and fast: six rows, big pieces, quick drops",
+      "theme": "sweets",
+      "goal": 300000000000,
+      "payoutScale": 630,
+      "milestones": [
+        {
+          "at": 0.01,
+          "unlock": "piece:flippers"
+        },
+        {
+          "at": 0.017,
+          "unlock": "piece:lids"
+        },
+        {
+          "at": 0.028,
+          "unlock": "piece:autoFlip"
+        },
+        {
+          "at": 0.046,
+          "unlock": "dropper:1"
+        },
+        {
+          "at": 0.077,
+          "unlock": "piece:trampoline"
+        },
+        {
+          "at": 0.13,
+          "unlock": "piece:suction"
+        },
+        {
+          "at": 0.22,
+          "unlock": "piece:magnet"
+        },
+        {
+          "at": 0.36,
+          "unlock": "piece:suctionPull"
+        },
+        {
+          "at": 0.6,
+          "unlock": "dropper:2"
+        }
+      ],
+      "rows": 6,
+      "maxDroppers": 3,
+      "costScale": 810000,
+      "distribution": {
+        "concentration": 30,
+        "sharpness": 1.2
+      },
+      "multipliers": [
+        25,
+        4,
+        1.5,
+        0.8,
+        1.5,
+        4,
+        25
+      ],
+      "sockets": [
+        {
+          "r": 3,
+          "i": 1
+        },
+        {
+          "r": 4,
+          "i": 2
+        }
+      ],
+      "flippers": [
+        {
+          "r": 2,
+          "i": 0,
+          "dir": -1
+        },
+        {
+          "r": 2,
+          "i": 2,
+          "dir": 1
+        }
+      ],
+      "pegTypes": [
+        "gold",
+        "multiplier",
+        "splitter",
+        "bumper"
+      ],
+      "pieces": [
+        "lids",
+        "flippers",
+        "autoFlip",
+        "trampoline",
+        "suction",
+        "suctionPull",
+        "magnet"
+      ],
+      "flatten": 0.7,
+      "power": 0.11,
+      "valueCost": 9700
+    },
+    {
+      "id": 7,
+      "name": "Star Station",
+      "blurb": "A wedge cuts the board in two: each ball commits to a side half-way down",
+      "theme": "station",
+      "goal": 39000000000000,
+      "payoutScale": 1700,
+      "milestones": [
+        {
+          "at": 0.01,
+          "unlock": "piece:flippers"
+        },
+        {
+          "at": 0.017,
+          "unlock": "piece:lids"
+        },
+        {
+          "at": 0.028,
+          "unlock": "piece:autoFlip"
+        },
+        {
+          "at": 0.046,
+          "unlock": "dropper:1"
+        },
+        {
+          "at": 0.077,
+          "unlock": "piece:trampoline"
+        },
+        {
+          "at": 0.13,
+          "unlock": "piece:suction"
+        },
+        {
+          "at": 0.22,
+          "unlock": "piece:magnet"
+        },
+        {
+          "at": 0.36,
+          "unlock": "piece:suctionPull"
+        },
+        {
+          "at": 0.6,
+          "unlock": "dropper:2"
+        }
+      ],
+      "rows": 10,
+      "maxDroppers": 3,
+      "costScale": 20000000,
+      "distribution": {
+        "concentration": 12,
+        "sharpness": 1.0
+      },
+      "shape": {
+        "gap": [
+          0,
+          0,
+          0,
+          0,
+          0.5,
+          1,
+          1.5,
+          1.5,
+          1.5,
+          1.5,
+          1.5
+        ]
+      },
+      "multipliers": [
+        150,
+        20,
+        4,
+        1,
+        0,
+        0,
+        0,
+        1,
+        4,
+        20,
+        150
+      ],
+      "sockets": [
+        {
+          "r": 2,
+          "i": 1
+        },
+        {
+          "r": 4,
+          "i": 1
+        },
+        {
+          "r": 6,
+          "i": 1
+        },
+        {
+          "r": 7,
+          "i": 6
+        }
+      ],
+      "flippers": [
+        {
+          "r": 3,
+          "i": 0,
+          "dir": -1
+        },
+        {
+          "r": 3,
+          "i": 3,
+          "dir": 1
+        }
+      ],
+      "pegTypes": [
+        "gold",
+        "multiplier",
+        "splitter",
+        "bumper"
+      ],
+      "pieces": [
+        "lids",
+        "flippers",
+        "autoFlip",
+        "trampoline",
+        "suction",
+        "suctionPull",
+        "magnet"
+      ],
+      "flatten": 0.7,
+      "power": 0.05,
+      "valueCost": 18200
+    }
+  ],
+  "boardTree": {
+    "topBucketMaxChance": 0.0167,
+    "pegs": {
+      "gold": {
+        "name": "Gold Peg",
+        "desc": "+coins on hit",
+        "color": "#ffd23f",
+        "maxLevel": 25,
+        "cost": {
+          "base": 40,
+          "growth": 1.55
+        },
+        "attraction": 1.0,
+        "bonusBase": 0.5,
+        "bonusPerLevel": 0.5
+      },
+      "multiplier": {
+        "name": "Multiplier Peg",
+        "desc": "\u00d7 final payout",
+        "color": "#c77dff",
+        "maxLevel": 20,
+        "cost": {
+          "base": 150,
+          "growth": 1.7
+        },
+        "attraction": 1.0,
+        "factorBase": 1.1,
+        "factorPerLevel": 0.05
+      },
+      "splitter": {
+        "name": "Splitter Peg",
+        "desc": "chance to split ball",
+        "color": "#69db7c",
+        "maxLevel": 10,
+        "cost": {
+          "base": 400,
+          "growth": 1.8
+        },
+        "attraction": 1.0,
+        "chanceBase": 0.15,
+        "chancePerLevel": 0.05,
+        "chanceMax": 0.65
+      },
+      "bumper": {
+        "name": "Bumper Peg",
+        "desc": "pushes balls outward",
+        "color": "#ff6b6b",
+        "maxLevel": 10,
+        "cost": {
+          "base": 300,
+          "growth": 1.8
+        },
+        "attraction": 0.5,
+        "pushBase": 0.3,
+        "pushPerLevel": 0.15
+      }
+    },
+    "pieces": {
+      "lids": {
+        "name": "Lids",
+        "desc": "Each lid closes one gap between two pegs; balls bounce off the other way",
+        "color": "#ff9f43",
+        "maxLevel": 3,
+        "cost": {
+          "base": 150,
+          "growth": 20
+        },
+        "kick": 2,
+        "minRowFrac": 0.5
+      },
+      "flippers": {
+        "name": "Flippers",
+        "desc": "Tap the board when a ball is in a flipper's ring to fling it toward the edge",
+        "color": "#ff4d8d",
+        "maxLevel": 1,
+        "cost": {
+          "base": 120,
+          "growth": 1
+        },
+        "flyRows": 2
+      },
+      "autoFlip": {
+        "name": "Auto-Flip",
+        "desc": "Flippers fire on their own",
+        "requires": "flippers",
+        "maxLevel": 5,
+        "cost": {
+          "base": 400,
+          "growth": 2.0
+        },
+        "chanceByLevel": [
+          0.1,
+          0.2,
+          0.3,
+          0.4,
+          0.5
+        ]
+      },
+      "trampoline": {
+        "name": "Trampoline",
+        "desc": "Bounces every ball that lands on it back up, up to 3 times; each bounce pays more",
+        "maxLevel": 5,
+        "cost": {
+          "base": 500,
+          "growth": 2.4
+        },
+        "bonusByLevel": [
+          1.5,
+          1.75,
+          2,
+          2.25,
+          2.5
+        ],
+        "maxBonusBounces": 3,
+        "restartRowFrac": 0.4
+      },
+      "suction": {
+        "name": "Suction Size",
+        "desc": "A band of wind that pulls balls toward the walls; each level adds a row",
+        "maxLevel": 3,
+        "cost": {
+          "base": 800,
+          "growth": 4
+        },
+        "startRowFrac": 0.35
+      },
+      "suctionPull": {
+        "name": "Suction Pull",
+        "desc": "How many of the balls crossing the wind get pulled",
+        "requires": "suction",
+        "maxLevel": 4,
+        "cost": {
+          "base": 500,
+          "growth": 2.2
+        },
+        "pullByLevel": [
+          0.6,
+          0.7,
+          0.8,
+          0.9,
+          1.0
+        ]
+      },
+      "magnet": {
+        "name": "Magnet",
+        "desc": "Pulls in every ball that falls near its bucket",
+        "maxLevel": 3,
+        "cost": {
+          "base": 600,
+          "growth": 4
+        },
+        "reachByLevel": [
+          3,
+          4,
+          5
+        ]
+      }
+    },
+    "droppers": {
+      "name": "Side Dropper",
+      "desc": "Another dropper beside the first, dropping at the full Drop Rate",
+      "cost": {
+        "base": 2000,
+        "growth": 6
+      },
+      "startRow": 2,
+      "chuteX": 1.6
+    }
+  },
+  "layout": {
+    "pegRadius": 0.11,
+    "ballRadius": 0.19,
+    "rowSpacing": 0.88,
+    "dropperHeight": 1.25,
+    "bucketTopOffset": 0.5,
+    "lidThickness": 0.1,
+    "flipperLength": 0.46,
+    "flipperWidth": 0.18,
+    "trampolinePadLift": 0.21,
+    "trampolinePadThickness": 0.15,
+    "bucketTaper": 0.8,
+    "bucketRim": 0.13,
+    "trampolineLandOffset": 0.2,
+    "specialPegScale": 1.45,
+    "bucketHeight": 0.85,
+    "bucketGap": 0.08,
+    "bucketLandDepth": 0.55,
+    "sideMargin": 0.35,
+    "topMargin": 0.35,
+    "bottomMargin": 0.95,
+    "maxDevicePixelRatio": 2
+  },
+  "animation": {
+    "dropInSec": 0.32,
+    "rowTimeSec": 0.27,
+    "rowTimeJitter": 0.12,
+    "rowTimeReferenceRows": 8,
+    "rowTimeRowsExponent": 0.5,
+    "maxHopRise": 0.26,
+    "maxTapRise": 0.45,
+    "landBounceHeight": 0.32,
+    "landBounceDecay": 0.45,
+    "landBounceSec": 0.26,
+    "landBounceDrift": 0.08,
+    "trampoline": {
+      "squashSec": 0.12,
+      "launchSec": 0.45,
+      "dropSec": 0.2,
+      "overshoot": 0.6
+    },
+    "lidBounceHeight": 0.3,
+    "lidHitSec": 0.13,
+    "lidHitOffset": 0.3,
+    "lidBackSec": 0.3,
+    "flipper": {
+      "windupSec": 0.05,
+      "swingSec": 0.12,
+      "holdSec": 0.1,
+      "returnSec": 0.22,
+      "restDeg": -110,
+      "sweepDeg": -190,
+      "windowBeforeSec": 0.28,
+      "windowAfterU": 0.45,
+      "ringRadius": 0.5,
+      "flightSec": 0.42,
+      "flightHeight": 0.12,
+      "settleSec": 0.06,
+      "cooldownSec": 0.25
+    },
+    "trampolineBobAmp": 0.025,
+    "magnetFieldSpeed": 0.7,
+    "maxSideDrift": 0.17,
+    "suctionDrift": 0.12,
+    "suctionStreaks": 22,
+    "suctionStreakSpeed": 0.55,
+    "pegPopupRise": 0.35,
+    "pegPopupDrift": 0.4,
+    "pegPopupSec": 0.7,
+    "hopHeight": [
+      0.22,
+      0.36
+    ],
+    "horizontalJitter": 0.07,
+    "spinSpeed": [
+      4,
+      10
+    ],
+    "doubleTapChance": 0.06,
+    "doubleTapHeight": 0.09,
+    "doubleTapTimeMul": 0.45,
+    "rimRollChance": 0.1,
+    "rimRollAngleDeg": 32,
+    "rimRollTimeMul": 0.35,
+    "topBucketWobble": {
+      "timeMul": 2.6,
+      "amplitude": 0.07,
+      "cycles": 2.5,
+      "rollOffDeg": 55,
+      "rollOffTimeMul": 0.7,
+      "finalFallTimeMul": 1.25
+    },
+    "rollOffFallTimeMul": 0.8,
+    "pegFlashSec": 0.35,
+    "pegWobbleAmp": 0.045,
+    "bucketBounceSec": 0.35,
+    "bucketBounceAmp": 0.18,
+    "floatTextSec": 1.0,
+    "floatTextRise": 0.9,
+    "floatTextMinPx": 13,
+    "floatTextMaxPx": 30,
+    "coinCounterLerpPerSec": 10,
+    "landSinkSec": 0.12
+  },
+  "pools": {
+    "maxBalls": 300,
+    "maxFloatTexts": 60
+  },
+  "themes": {
+    "toybox": {
+      "scene": "playroom",
+      "style": "framed",
+      "image": "assets/toybox/room.jpg",
+      "roomFloor": "#1a1450",
+      "sprites": {
+        "dropper": "assets/toybox/funnel.png",
+        "flipper": "assets/toybox/flipper.png",
+        "magnet": "assets/toybox/magnet.png",
+        "trampoline": "assets/toybox/trampoline.png",
+        "lid": "assets/toybox/lid.png",
+        "peg_gold": "assets/toybox/peg_gold.png",
+        "peg_multiplier": "assets/toybox/peg_multiplier.png",
+        "peg_splitter": "assets/toybox/peg_splitter.png",
+        "peg_bumper": "assets/toybox/peg_bumper.png",
+        "bucket_gold": "assets/cove/cup_gold.png",
+        "bucket_pink": "assets/toybox/cup_pink.png",
+        "bucket_green": "assets/toybox/cup_green.png",
+        "bucket_teal": "assets/cove/cup_teal.png",
+        "bucket_blue": "assets/cove/cup_blue.png"
+      },
+      "field": "#1b1657",
+      "frame": "#7b5cff",
+      "glint": "#ffb347",
+      "tiles": [
+        "#ffc93c",
+        "#ff7eb6",
+        "#7ee081",
+        "#4fd6c8",
+        "#4aa8ff"
+      ],
+      "pegShape": "circle",
+      "pattern": "dots",
+      "wall": "#6f78d8",
+      "bgTop": "#2b2f77",
+      "bgBottom": "#141852",
+      "peg": "#e9ecff",
+      "pegShadow": "rgba(0,0,0,0.28)",
+      "pegFlash": "#ffe066",
+      "dropper": "#ff8a5c",
+      "bucketLow": "#4cc9f0",
+      "bucketMid": "#b5e48c",
+      "bucketHigh": "#ff4d8d",
+      "bucketTop": "#ffd23f",
+      "bucketText": "#14163a",
+      "goldenGlow": "rgba(255,210,63,0.45)",
+      "goldenText": "#ffd23f",
+      "floatText": "#ffe066",
+      "oddsText": "rgba(233,236,255,0.75)",
+      "cups": [
+        "gold",
+        "pink",
+        "green",
+        "teal",
+        "blue"
+      ]
+    },
+    "cove": {
+      "scene": "cave",
+      "style": "framed",
+      "image": "assets/cove/cave.jpg",
+      "roomFloor": "#1c0f3a",
+      "sprites": {
+        "dropper": "assets/cove/funnel.png",
+        "flipper": "assets/toybox/flipper.png",
+        "magnet": "assets/toybox/magnet.png",
+        "trampoline": "assets/toybox/trampoline.png",
+        "lid": "assets/toybox/lid.png",
+        "peg_gold": "assets/toybox/peg_gold.png",
+        "peg_multiplier": "assets/toybox/peg_multiplier.png",
+        "peg_splitter": "assets/toybox/peg_splitter.png",
+        "peg_bumper": "assets/toybox/peg_bumper.png",
+        "bucket_gold": "assets/cove/cup_gold.png",
+        "bucket_blue": "assets/cove/cup_blue.png",
+        "bucket_teal": "assets/cove/cup_teal.png"
+      },
+      "field": "#40206c",
+      "frame": "#f2a23c",
+      "glint": "#ffe08a",
+      "tiles": [
+        "#ffc21a",
+        "#2f6fe0",
+        "#2b66d6",
+        "#275dcb",
+        "#1fa9b8",
+        "#1c9eac"
+      ],
+      "pegShape": "circle",
+      "pattern": "dots",
+      "wall": "#f2a23c",
+      "bgTop": "#3a1c63",
+      "bgBottom": "#1c0f3a",
+      "peg": "#f4eeff",
+      "pegShadow": "rgba(0,0,0,0.28)",
+      "pegFlash": "#ffe066",
+      "dropper": "#f2b233",
+      "bucketLow": "#4cc9f0",
+      "bucketMid": "#b5e48c",
+      "bucketHigh": "#ff4d8d",
+      "bucketTop": "#ffc21a",
+      "bucketText": "#ffffff",
+      "goldenGlow": "rgba(255,210,63,0.45)",
+      "goldenText": "#ffd23f",
+      "floatText": "#ffe066",
+      "oddsText": "rgba(244,238,255,0.85)",
+      "bolts": true,
+      "cups": [
+        "gold",
+        "blue",
+        "blue",
+        "blue",
+        "teal",
+        "teal"
+      ]
+    },
+    "ocean": {
+      "scene": "reef",
+      "pegShape": "circle",
+      "pattern": "waves",
+      "wall": "#2a9d8f",
+      "bgTop": "#0b6e8f",
+      "bgBottom": "#052a44",
+      "peg": "#e0fbfc",
+      "pegShadow": "rgba(0,0,0,0.3)",
+      "pegFlash": "#ffe066",
+      "dropper": "#ffb703",
+      "bucketLow": "#48cae4",
+      "bucketMid": "#90e0ef",
+      "bucketHigh": "#fb8500",
+      "bucketTop": "#ffd23f",
+      "bucketText": "#052a44",
+      "goldenGlow": "rgba(255,210,63,0.45)",
+      "goldenText": "#ffd23f",
+      "floatText": "#ffe066",
+      "oddsText": "rgba(224,251,252,0.8)"
+    },
+    "sunset": {
+      "scene": "dusk",
+      "pegShape": "diamond",
+      "pattern": "stripes",
+      "wall": "#b5179e",
+      "bgTop": "#b5446e",
+      "bgBottom": "#3a1c5c",
+      "peg": "#fff1e6",
+      "pegShadow": "rgba(0,0,0,0.3)",
+      "pegFlash": "#fff3b0",
+      "dropper": "#ffd166",
+      "bucketLow": "#f8961e",
+      "bucketMid": "#f9c74f",
+      "bucketHigh": "#f94144",
+      "bucketTop": "#ffffff",
+      "bucketText": "#3a1c5c",
+      "goldenGlow": "rgba(255,210,63,0.45)",
+      "goldenText": "#ffd23f",
+      "floatText": "#fff3b0",
+      "oddsText": "rgba(255,241,230,0.8)"
+    },
+    "candy": {
+      "scene": "sweets",
+      "pegShape": "circle",
+      "pattern": "stripes",
+      "wall": "#ff9ecb",
+      "bgTop": "#8a2c6b",
+      "bgBottom": "#3d1140",
+      "peg": "#fff0f6",
+      "pegShadow": "rgba(0,0,0,0.28)",
+      "pegFlash": "#fff3b0",
+      "dropper": "#ffd166",
+      "bucketLow": "#9bf6ff",
+      "bucketMid": "#ffc6ff",
+      "bucketHigh": "#ff5d8f",
+      "bucketTop": "#ffd23f",
+      "bucketText": "#3d1140",
+      "goldenGlow": "rgba(255,210,63,0.45)",
+      "goldenText": "#ffd23f",
+      "floatText": "#fff3b0",
+      "oddsText": "rgba(255,240,246,0.8)"
+    },
+    "neon": {
+      "scene": "synth",
+      "pegShape": "diamond",
+      "pattern": "grid",
+      "wall": "#ff2e97",
+      "bgTop": "#1b0b3a",
+      "bgBottom": "#05010f",
+      "peg": "#7df9ff",
+      "pegShadow": "rgba(0,0,0,0.4)",
+      "pegFlash": "#ffffff",
+      "dropper": "#ff2e97",
+      "bucketLow": "#3a0ca3",
+      "bucketMid": "#7209b7",
+      "bucketHigh": "#f72585",
+      "bucketTop": "#f9f871",
+      "bucketText": "#ffffff",
+      "goldenGlow": "rgba(249,248,113,0.45)",
+      "goldenText": "#f9f871",
+      "floatText": "#7df9ff",
+      "oddsText": "rgba(125,249,255,0.8)"
+    },
+    "forest": {
+      "scene": "woods",
+      "pegShape": "square",
+      "pattern": "dots",
+      "wall": "#8d6e4a",
+      "bgTop": "#1f5a3d",
+      "bgBottom": "#0b2a1c",
+      "peg": "#f1f7e4",
+      "pegShadow": "rgba(0,0,0,0.3)",
+      "pegFlash": "#ffe066",
+      "dropper": "#c9713a",
+      "bucketLow": "#74c69d",
+      "bucketMid": "#d9ed92",
+      "bucketHigh": "#f4a259",
+      "bucketTop": "#ffd23f",
+      "bucketText": "#0b2a1c",
+      "goldenGlow": "rgba(255,210,63,0.45)",
+      "goldenText": "#ffd23f",
+      "floatText": "#ffe066",
+      "oddsText": "rgba(241,247,228,0.8)"
+    },
+    "space": {
+      "scene": "cosmos",
+      "pegShape": "star",
+      "pattern": "stars",
+      "wall": "#6c7bd1",
+      "bgTop": "#101a3a",
+      "bgBottom": "#02030c",
+      "peg": "#cfd8ff",
+      "pegShadow": "rgba(0,0,0,0.45)",
+      "pegFlash": "#9bf6ff",
+      "dropper": "#8ecae6",
+      "bucketLow": "#5a6acf",
+      "bucketMid": "#9d8df1",
+      "bucketHigh": "#ff8fab",
+      "bucketTop": "#ffd23f",
+      "bucketText": "#02030c",
+      "goldenGlow": "rgba(255,210,63,0.45)",
+      "goldenText": "#ffd23f",
+      "floatText": "#9bf6ff",
+      "oddsText": "rgba(207,216,255,0.8)"
+    },
+    "fair": {
+      "scene": "fair",
+      "style": "framed",
+      "image": "assets/fair/bg.jpg",
+      "roomFloor": "#241026",
+      "sprites": {
+        "dropper": "assets/fair/funnel.png",
+        "flipper": "assets/toybox/flipper.png",
+        "magnet": "assets/toybox/magnet.png",
+        "trampoline": "assets/toybox/trampoline.png",
+        "lid": "assets/toybox/lid.png",
+        "peg_gold": "assets/toybox/peg_gold.png",
+        "peg_multiplier": "assets/toybox/peg_multiplier.png",
+        "peg_splitter": "assets/toybox/peg_splitter.png",
+        "peg_bumper": "assets/toybox/peg_bumper.png",
+        "bucket_gold": "assets/cove/cup_gold.png",
+        "bucket_red": "assets/cups/cup_red.png",
+        "bucket_orange": "assets/cups/cup_orange.png",
+        "bucket_pink": "assets/toybox/cup_pink.png",
+        "bucket_purple": "assets/cups/cup_purple.png",
+        "bucket_blue": "assets/cove/cup_blue.png"
+      },
+      "field": "#3a1838",
+      "frame": "#e8473f",
+      "glint": "#ffe2a8",
+      "tiles": [
+        "#ffc21a",
+        "#e8473f",
+        "#ff8a3c",
+        "#ff5fa8",
+        "#9a5cf0",
+        "#2f6fe0"
+      ],
+      "pegShape": "diamond",
+      "pattern": "dots",
+      "wall": "#e8473f",
+      "bgTop": "#3a1838",
+      "bgBottom": "#241026",
+      "peg": "#f4eeff",
+      "pegShadow": "rgba(0,0,0,0.28)",
+      "pegFlash": "#ffe066",
+      "dropper": "#f2b233",
+      "bucketLow": "#4cc9f0",
+      "bucketMid": "#b5e48c",
+      "bucketHigh": "#ff4d8d",
+      "bucketTop": "#ffc21a",
+      "bucketText": "#ffffff",
+      "goldenGlow": "rgba(255,210,63,0.45)",
+      "goldenText": "#ffd23f",
+      "floatText": "#ffe066",
+      "oddsText": "rgba(244,238,255,0.85)",
+      "bolts": true,
+      "cups": [
+        "gold",
+        "red",
+        "orange",
+        "pink",
+        "purple",
+        "blue"
+      ]
+    },
+    "temple": {
+      "scene": "temple",
+      "style": "framed",
+      "image": "assets/temple/bg.jpg",
+      "roomFloor": "#0c1f28",
+      "sprites": {
+        "dropper": "assets/temple/funnel.png",
+        "flipper": "assets/toybox/flipper.png",
+        "magnet": "assets/toybox/magnet.png",
+        "trampoline": "assets/toybox/trampoline.png",
+        "lid": "assets/toybox/lid.png",
+        "peg_gold": "assets/toybox/peg_gold.png",
+        "peg_multiplier": "assets/toybox/peg_multiplier.png",
+        "peg_splitter": "assets/toybox/peg_splitter.png",
+        "peg_bumper": "assets/toybox/peg_bumper.png",
+        "bucket_gold": "assets/cove/cup_gold.png",
+        "bucket_teal": "assets/cove/cup_teal.png",
+        "bucket_orange": "assets/cups/cup_orange.png",
+        "bucket_red": "assets/cups/cup_red.png",
+        "bucket_purple": "assets/cups/cup_purple.png",
+        "bucket_blue": "assets/cove/cup_blue.png"
+      },
+      "field": "#12303a",
+      "frame": "#d9a55a",
+      "glint": "#4fe0d0",
+      "tiles": [
+        "#ffc21a",
+        "#1fa9b8",
+        "#ff8a3c",
+        "#e8473f",
+        "#9a5cf0",
+        "#2f6fe0"
+      ],
+      "pegShape": "circle",
+      "pattern": "dots",
+      "wall": "#d9a55a",
+      "bgTop": "#12303a",
+      "bgBottom": "#0c1f28",
+      "peg": "#f4eeff",
+      "pegShadow": "rgba(0,0,0,0.28)",
+      "pegFlash": "#ffe066",
+      "dropper": "#f2b233",
+      "bucketLow": "#4cc9f0",
+      "bucketMid": "#b5e48c",
+      "bucketHigh": "#ff4d8d",
+      "bucketTop": "#ffc21a",
+      "bucketText": "#ffffff",
+      "goldenGlow": "rgba(255,210,63,0.45)",
+      "goldenText": "#ffd23f",
+      "floatText": "#ffe066",
+      "oddsText": "rgba(244,238,255,0.85)",
+      "bolts": true,
+      "cups": [
+        "gold",
+        "teal",
+        "orange",
+        "red",
+        "purple",
+        "blue"
+      ]
+    },
+    "snow": {
+      "scene": "snow",
+      "style": "framed",
+      "image": "assets/snow/bg.jpg",
+      "roomFloor": "#0c1836",
+      "sprites": {
+        "dropper": "assets/snow/funnel.png",
+        "flipper": "assets/toybox/flipper.png",
+        "magnet": "assets/toybox/magnet.png",
+        "trampoline": "assets/toybox/trampoline.png",
+        "lid": "assets/toybox/lid.png",
+        "peg_gold": "assets/toybox/peg_gold.png",
+        "peg_multiplier": "assets/toybox/peg_multiplier.png",
+        "peg_splitter": "assets/toybox/peg_splitter.png",
+        "peg_bumper": "assets/toybox/peg_bumper.png",
+        "bucket_gold": "assets/cove/cup_gold.png",
+        "bucket_cyan": "assets/cups/cup_cyan.png",
+        "bucket_blue": "assets/cove/cup_blue.png",
+        "bucket_lavender": "assets/cups/cup_lavender.png",
+        "bucket_teal": "assets/cove/cup_teal.png",
+        "bucket_purple": "assets/cups/cup_purple.png"
+      },
+      "field": "#142850",
+      "frame": "#8fd3ff",
+      "glint": "#ffffff",
+      "tiles": [
+        "#ffc21a",
+        "#35c8f0",
+        "#2f6fe0",
+        "#a9a4f0",
+        "#1fa9b8",
+        "#9a5cf0"
+      ],
+      "pegShape": "diamond",
+      "pattern": "dots",
+      "wall": "#8fd3ff",
+      "bgTop": "#142850",
+      "bgBottom": "#0c1836",
+      "peg": "#f4eeff",
+      "pegShadow": "rgba(0,0,0,0.28)",
+      "pegFlash": "#ffe066",
+      "dropper": "#f2b233",
+      "bucketLow": "#4cc9f0",
+      "bucketMid": "#b5e48c",
+      "bucketHigh": "#ff4d8d",
+      "bucketTop": "#ffc21a",
+      "bucketText": "#ffffff",
+      "goldenGlow": "rgba(255,210,63,0.45)",
+      "goldenText": "#ffd23f",
+      "floatText": "#ffe066",
+      "oddsText": "rgba(244,238,255,0.85)",
+      "bolts": true,
+      "cups": [
+        "gold",
+        "cyan",
+        "blue",
+        "lavender",
+        "teal",
+        "purple"
+      ]
+    },
+    "sweets": {
+      "scene": "sweets",
+      "style": "framed",
+      "image": "assets/sweets/bg.jpg",
+      "roomFloor": "#2c0f28",
+      "sprites": {
+        "dropper": "assets/sweets/funnel.png",
+        "flipper": "assets/toybox/flipper.png",
+        "magnet": "assets/toybox/magnet.png",
+        "trampoline": "assets/toybox/trampoline.png",
+        "lid": "assets/toybox/lid.png",
+        "peg_gold": "assets/toybox/peg_gold.png",
+        "peg_multiplier": "assets/toybox/peg_multiplier.png",
+        "peg_splitter": "assets/toybox/peg_splitter.png",
+        "peg_bumper": "assets/toybox/peg_bumper.png",
+        "bucket_gold": "assets/cove/cup_gold.png",
+        "bucket_pink": "assets/toybox/cup_pink.png",
+        "bucket_mint": "assets/cups/cup_mint.png",
+        "bucket_purple": "assets/cups/cup_purple.png",
+        "bucket_orange": "assets/cups/cup_orange.png",
+        "bucket_cyan": "assets/cups/cup_cyan.png"
+      },
+      "field": "#4a1840",
+      "frame": "#ff7eb6",
+      "glint": "#9ff0d0",
+      "tiles": [
+        "#ffc21a",
+        "#ff5fa8",
+        "#7fe0b8",
+        "#9a5cf0",
+        "#ff8a3c",
+        "#35c8f0"
+      ],
+      "pegShape": "square",
+      "pattern": "dots",
+      "wall": "#ff7eb6",
+      "bgTop": "#4a1840",
+      "bgBottom": "#2c0f28",
+      "peg": "#f4eeff",
+      "pegShadow": "rgba(0,0,0,0.28)",
+      "pegFlash": "#ffe066",
+      "dropper": "#f2b233",
+      "bucketLow": "#4cc9f0",
+      "bucketMid": "#b5e48c",
+      "bucketHigh": "#ff4d8d",
+      "bucketTop": "#ffc21a",
+      "bucketText": "#ffffff",
+      "goldenGlow": "rgba(255,210,63,0.45)",
+      "goldenText": "#ffd23f",
+      "floatText": "#ffe066",
+      "oddsText": "rgba(244,238,255,0.85)",
+      "bolts": true,
+      "cups": [
+        "gold",
+        "pink",
+        "mint",
+        "purple",
+        "orange",
+        "cyan"
+      ]
+    },
+    "station": {
+      "scene": "station",
+      "style": "framed",
+      "image": "assets/station/bg.jpg",
+      "roomFloor": "#0a1030",
+      "sprites": {
+        "dropper": "assets/station/funnel.png",
+        "flipper": "assets/toybox/flipper.png",
+        "magnet": "assets/toybox/magnet.png",
+        "trampoline": "assets/toybox/trampoline.png",
+        "lid": "assets/toybox/lid.png",
+        "peg_gold": "assets/toybox/peg_gold.png",
+        "peg_multiplier": "assets/toybox/peg_multiplier.png",
+        "peg_splitter": "assets/toybox/peg_splitter.png",
+        "peg_bumper": "assets/toybox/peg_bumper.png",
+        "bucket_gold": "assets/cove/cup_gold.png",
+        "bucket_pink": "assets/toybox/cup_pink.png",
+        "bucket_cyan": "assets/cups/cup_cyan.png",
+        "bucket_purple": "assets/cups/cup_purple.png",
+        "bucket_blue": "assets/cove/cup_blue.png",
+        "bucket_lavender": "assets/cups/cup_lavender.png"
+      },
+      "field": "#101a44",
+      "frame": "#9fb4d8",
+      "glint": "#3ff0ff",
+      "tiles": [
+        "#ffc21a",
+        "#ff5fa8",
+        "#35c8f0",
+        "#9a5cf0",
+        "#2f6fe0",
+        "#a9a4f0"
+      ],
+      "pegShape": "star",
+      "pattern": "dots",
+      "wall": "#9fb4d8",
+      "bgTop": "#101a44",
+      "bgBottom": "#0a1030",
+      "peg": "#f4eeff",
+      "pegShadow": "rgba(0,0,0,0.28)",
+      "pegFlash": "#ffe066",
+      "dropper": "#f2b233",
+      "bucketLow": "#4cc9f0",
+      "bucketMid": "#b5e48c",
+      "bucketHigh": "#ff4d8d",
+      "bucketTop": "#ffc21a",
+      "bucketText": "#ffffff",
+      "goldenGlow": "rgba(255,210,63,0.45)",
+      "goldenText": "#ffd23f",
+      "floatText": "#ffe066",
+      "oddsText": "rgba(244,238,255,0.85)",
+      "bolts": true,
+      "cups": [
+        "gold",
+        "pink",
+        "cyan",
+        "purple",
+        "blue",
+        "lavender"
+      ]
+    }
+  },
+  "format": {
+    "suffixes": [
+      "",
+      "K",
+      "M",
+      "B",
+      "T",
+      "Qa",
+      "Qi",
+      "Sx",
+      "Sp",
+      "Oc",
+      "No",
+      "Dc"
+    ],
+    "letterSuffixesAfter": true
+  },
+  "harness": {
+    "targetMinutes": [
+      20,
+      45,
+      75,
+      110,
+      160,
+      220,
+      270
+    ],
+    "newBoardIncomeShare": 1.0,
+    "boardCostWeight": 0.5,
+    "dropsPerBoard": 40000,
+    "histogramTolerance": 0.01,
+    "evTolerancePct": 3,
+    "evDropsPerBoard": 250000,
+    "growthTarget": [
+      null,
+      2,
+      3.2,
+      5.4,
+      11.7,
+      29,
+      63
+    ],
+    "powerMin": 0.05,
+    "bucketFlatten": 0.7,
+    "valueStartSec": 45,
+    "patienceSec": 90
+  }
+}

@@ -1,3 +1,4 @@
+import { createAudio } from './audio.js';
 import { Game } from './game/game.js';
 import { Renderer, bucketColors, drawBallSprite } from './game/renderer.js';
 import { configureFormat, fmt } from './core/format.js';
@@ -542,6 +543,26 @@ const coinsEl = $('coins'), coinsBox = $('coinsBox');
 game.on('land', () => {
   coinsBox.classList.remove('bump'); void coinsBox.offsetWidth; coinsBox.classList.add('bump');
 });
+// ---------- Sound ----------
+const audio = createAudio(config.audio);
+game.on('land', (e) => {
+  const ms = game.ctx.mults, lo = Math.min(...ms), hi = Math.max(...ms);
+  audio.play('land', hi > lo ? Math.log(ms[e.bucket] / lo) / Math.log(hi / lo) : 0);
+});
+game.on('jackpot', () => audio.play('jackpot'));
+game.on('purchase', () => audio.play('purchase'));
+game.on('special_peg_hit', (e) => audio.play(e.type));
+game.on('flip', () => audio.play('flip'));
+game.on('tap_ball', () => audio.play('tap'));
+game.on('piece_placed', () => audio.play('place'));
+game.on('frenzy', () => audio.play('frenzy'));
+game.on('frenzy_end', () => audio.play('frenzyEnd'));
+game.on('milestone', () => audio.play('milestone'));
+game.on('board_complete', () => audio.play('boardComplete'));
+game.on('equip', () => audio.play('click'));
+function showSound() { const b = $('soundBtn'); b.classList.toggle('on', !audio.muted); b.textContent = audio.muted ? 'Sound off' : 'Sound on'; b.setAttribute('aria-pressed', String(!audio.muted)); }
+$('soundBtn').addEventListener('click', () => { audio.setMuted(!audio.muted); showSound(); audio.play('click'); });
+showSound();
 game.on('jackpot', (e) => console.log('[jackpot]', e));
 game.on('purchase', (e) => console.log('[purchase]', e));
 game.on('equip', (e) => console.log('[equip]', e));

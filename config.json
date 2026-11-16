@@ -1975,5 +1975,16 @@
     "bucketFlatten": 0.7,
     "valueStartSec": 45,
     "patienceSec": 90
+  },
+  "audio": {
+    "volume": 0.5,
+    "minGapSec": {
+      "land": 0.07,
+      "gold": 0.08,
+      "multiplier": 0.08,
+      "bumper": 0.08,
+      "jackpot": 0.5,
+      "purchase": 0.05
+    }
   }
 }

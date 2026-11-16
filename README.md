@@ -2,7 +2,7 @@
 
 A mobile-first idle plinko prototype in plain JavaScript and Canvas 2D. Seven themed boards, about 15 hours of progression.
 
-**Play:** https://pawasbuddy.github.io/plinko-idle/
+**Play:** https://pawas-shrivastava.github.io/plinko-idle/
 
 ## Run locally
 
